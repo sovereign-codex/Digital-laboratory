@@ -1,1 +1,0 @@
-/digital-laboratory-discoveries/.github/workflows
