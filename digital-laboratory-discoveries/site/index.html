@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <title>Digital Laboratory Discoveries</title>
+  <link rel='stylesheet' href='scroll.css'>
+</head>
+<body>
+<header>
+  <h1>Digital Laboratory Discoveries</h1>
+  <p class='sub'>Daily Laboratory Scrolls · Sovereign Intelligence</p>
+  <p><a href="https://github.com/sovereign-codex/digital-laboratory-discoveries" target="_blank">GitHub Repo</a></p>
+</header>
+<main>
+  <section id='latest'><h2>Latest</h2><div class='card' id='latest-entry'>Loading…</div></section>
+  <section id='archive'><h2>Archive</h2><div id='list'></div></section>
+</main>
+<footer>© Sovereign Intelligence — Hash-verifiable manifest.</footer>
+<script>
+async function load() {
+  const res = await fetch('../data/manifest.json', {cache: 'no-store'});
+  const data = await res.json();
+  const list = document.getElementById('list');
+  const latest = document.getElementById('latest-entry');
+  const entries = data.entries || [];
+  if (!entries.length) { latest.textContent = 'No entries yet.'; return; }
+  const [first, ...rest] = entries;
+  latest.innerHTML = `
+    <div class="entry">
+      <div class="meta">
+        <div class="date">${first.date}</div>
+        <div class="title">${first.title}</div>
+      </div>
+      <div class="links">
+        <a href="../${first.file}" target="_blank">Download PDF</a>
+      </div>
+    </div>
+  `;
+  for (const e of entries) {
+    const item = document.createElement('div');
+    item.className = 'entry';
+    item.innerHTML = `
+      <div class="meta">
+        <div class="date">${e.date}</div>
+        <div class="title">${e.title}</div>
+        ${e.checksum ? `<div class="checksum">sha256: ${e.checksum}</div>` : ''}
+      </div>
+      <div class="links"><a href="../${e.file}" target="_blank">PDF</a></div>
+    `;
+    list.appendChild(item);
+  }
+}
+load();
+</script>
+</body>
+</html>
